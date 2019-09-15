@@ -1,4 +1,5 @@
 const containerMain = $(".total-container");
+const loadMoreBtn = $("#loadmore-btn");
 const loader = $(".loader");
 const loader1 = $(".loader1");
 const nomoreresults = $(".nomoreresults");
@@ -8,7 +9,7 @@ const searchDiv = $(".search-div input");
 const searchBtn = $(".search-but");
 const footer = $("footer");
 let loadmoreCount = 0;
-let onscrollloader = true;
+let showLoadMoreBtn = true;
 let category = "latest";
 
 async function getData() {
@@ -43,9 +44,9 @@ async function getData() {
         })
 
     } else {
-        loader1.css("display", "none");
+        showLoadMoreBtn = false;
+        loadMoreBtn.css("display", "none");
         nomoreresults.css("display", "block");
-        onscrollloader = false
     }
 }
 getData().then(() => {
@@ -53,16 +54,19 @@ getData().then(() => {
     containerMain.css("display", "block");
 });
 
-window.onscroll = () => {
-    if (onscrollloader) {
-        let _windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
-            _scrollPos = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-        if ((_windowHeight + _scrollPos) >= document.body.offsetHeight / 1.3) {
-            loader1.css("display", "block");
-            getData();
-        }
-    }
-}
+loadMoreBtn.on("click", ()=>{
+    loadMoreBtn.attr("disabled", true);
+    loadMoreBtn.html("Loading..")
+    setTimeout(()=>{
+        getData().then(()=>{
+            loadMoreBtn.html("LOAD MORE");
+            if(showLoadMoreBtn){
+                loadMoreBtn.attr("disabled", false);
+                loadMoreBtn.css("display", "inline-block");
+            }
+        });
+    }, 200)
+});
 
 let rightButton = $("#right-btn");
 let leftButton = $("#left-btn");
@@ -177,25 +181,34 @@ $(".tabs a").on('click', function() {
         articlesDiv.html("");
         loadmoreCount = 0;
         category = "trending";
+        showLoadMoreBtn = true;
+        loadMoreBtn.css("display", "none");
+        loader1.css("display", "block");
         footer.css("display", "none");
         nomoreresults.css("display", "none");
         loader1.css("display", "block");
         getData().then(() => {
-            onscrollloader = true;
-            footer.css("display", "block");
             loader1.css("display", "none");
+            if(showLoadMoreBtn){
+                loadMoreBtn.css("display", "inline-block");
+            }
+            footer.css("display", "block");
         });
     } else {
         articlesDiv.html("");
         loadmoreCount = 0;
         category = "latest";
+        showLoadMoreBtn = true;
+        loadMoreBtn.css("display", "none");
+        loader1.css("display", "block");
         footer.css("display", "none");
         nomoreresults.css("display", "none");
-        loader1.css("display", "block");
         getData().then(() => {
-            onscrollloader = true;
-            footer.css("display", "block");
             loader1.css("display", "none");
+            if(showLoadMoreBtn){
+                loadMoreBtn.css("display", "inline-block");
+            }
+            footer.css("display", "block");
         });
     }
 });

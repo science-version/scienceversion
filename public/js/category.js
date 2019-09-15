@@ -1,6 +1,6 @@
 const containerMain = $(".total-container");
+const loadMoreBtn = $("#loadmore-btn");
 const loader = $(".loader");
-const loader1 = $(".loader1");
 const nomoreresults = $(".nomoreresults");
 const articlesDiv = $(".article-cards-div");
 const title = $("header .title");
@@ -11,7 +11,7 @@ const but = $("header .but");
 const butimg = $("header .but-img");
 const category = window.location.pathname.split("/")[1].toLowerCase()
 let loadmoreCount = 0;
-let onscrollloader = true;
+let showLoadMoreBtn = true;
 
 async function getData() {
     let url = `categorydata/${loadmoreCount},${category}`
@@ -44,9 +44,9 @@ async function getData() {
         })
 
     } else {
-        loader1.css('display', 'none');
+        showLoadMoreBtn = false;
+        loadMoreBtn.css("display", "none");
         nomoreresults.css("display", "block");
-        onscrollloader = false
     }
 }
 getData().then(() => {
@@ -59,16 +59,19 @@ window.onscroll = () => {
     scrollnav()
 }
 
-function onscrollload() {
-    if (onscrollloader) {
-        let _windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight,
-            _scrollPos = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
-        if ((_windowHeight + _scrollPos) >= document.body.offsetHeight / 1.3) {
-            loader1.css("display", "block");
-            getData();
-        }
-    }
-}
+loadMoreBtn.on("click", ()=>{
+    loadMoreBtn.attr("disabled", true);
+    loadMoreBtn.html("Loading..")
+    setTimeout(()=>{
+        getData().then(()=>{
+            loadMoreBtn.html("LOAD MORE");
+            if(showLoadMoreBtn){
+                loadMoreBtn.attr("disabled", false);
+                loadMoreBtn.css("display", "inline-block");
+            }
+        });
+    }, 200)
+});
 
 function scrollnav() {
     if (document.body.scrollTop > 170 || document.documentElement.scrollTop > 170) {

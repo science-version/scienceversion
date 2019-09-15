@@ -258,14 +258,9 @@ header {
     transform: scale(1.04);
 }
 
-.loader,
-.loader1 {
+.loader {
     margin: 25px auto;
     animation: spinner 1.5s linear infinite;
-}
-
-.loader1 {
-    display: none;
 }
 
 footer {
@@ -289,6 +284,22 @@ footer div img {
 .copyright-text {
     line-height: 60px;
     margin-left: 10px;
+}
+
+.loadmore-div{
+    text-align: center;
+}
+
+#loadmore-btn{
+    cursor: pointer;
+    margin: 20px;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    color: white;
+    background: #564c97;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.14), 0 2px 1px -1px rgba(0,0,0,0.12), 0 1px 3px 0 rgba(0,0,0,0.2);
 }
 
 @keyframes spinner {
